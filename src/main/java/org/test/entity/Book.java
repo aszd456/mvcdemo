@@ -1,5 +1,7 @@
 package org.test.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**

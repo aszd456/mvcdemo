@@ -11,7 +11,7 @@
     BeanNameUrl 处理器映射器，根据请求的 url 与 Spring 容器中定义的 bean 的 name 进行匹配，从而从 Spring 容器中找到 bean 实例，就是说，请求的 Url 地址就是处理器 Bean 的名字。
 
     这个 HandlerMapping 配置如下：
-    ```
+    ```xml
     <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" id="handlerMapping">
         <property name="beanName" value="/hello"/>
     </bean>
@@ -19,7 +19,7 @@
 * SimpleUrlHandlerMapping
 
     SimpleUrlHandlerMapping 是 BeanNameUrlHandlerMapping 的增强版本，它可以将 url 和处理器 bean 的 id 进行统一映射配置:
-    ```
+    ```xml
     <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" id="handlerMapping">
            <property name="mappings">
                <props>
@@ -45,7 +45,7 @@ HandlerAdapter 会根据适配器接口对后端控制器进行包装（适配�
     通过此适配器进行适配、执行，也就是说，如果我们开发的接口是通过实现 Controller 接口
     来完成的（不是通过注解开发的接口），那么 HandlerAdapter 
     必须是 SimpleControllerHandlerAdapter。
-    ```
+    ```xml
     <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
     ```
   
@@ -54,7 +54,7 @@ HandlerAdapter 会根据适配器接口对后端控制器进行包装（适配�
     HttpRequestHandlerAdapter，http 请求处理器适配器，所有实现了 org.springframework.web.HttpRequestHandler 接口的 Bean 通过此适配器进行适配、执行。 
     
     例如存在如下接口：
-    ```
+    ```java
     @Controller
     public class MyController2 implements HttpRequestHandler {
         public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -62,7 +62,7 @@ HandlerAdapter 会根据适配器接口对后端控制器进行包装（适配�
         }
     }
     ``` 
-    ```
+    ```xml
     <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" id="handlerMapping">
         <property name="mappings">
             <props>
@@ -79,7 +79,7 @@ HandlerAdapter 会根据适配器接口对后端控制器进行包装（适配�
 
     web 开发中，我们基本上不再通过 XML 或者 Java 配置来创建一个 Bean 的实例，
     而是直接通过组件扫描来实现 Bean 的配置，如果要扫描多个包，多个包之间用 , 隔开即可：
-    ```
+    ```xml
     <context:component-scan base-package="org.sang"/>
     ```  
 
@@ -91,7 +91,7 @@ HandlerAdapter 会根据适配器接口对后端控制器进行包装（适配�
     
     对于上面提到的通过 @RequestMapping 注解所定义出来的接口方法，这些方法的调用都是要通过 RequestMappingHandlerAdapter 这个适配器来实现。
     例如我们开发一个接口：
-    ```
+    ```java
     @Controller
     public class MyController3 {
         @RequestMapping("/hello3")
@@ -101,7 +101,7 @@ HandlerAdapter 会根据适配器接口对后端控制器进行包装（适配�
     }
     ```
     要能够访问到这个接口，我们需要 RequestMappingHandlerMapping 才能定位到需要执行的方法，需要 RequestMappingHandlerAdapter，才能执行定位到的方法，修改 springmvc 的配置文件如下：
-    ```
+    ```xml
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -122,11 +122,11 @@ HandlerAdapter 会根据适配器接口对后端控制器进行包装（适配�
 * 继续优化
 
     由于开发中，我们常用的是 RequestMappingHandlerMapping 和 RequestMappingHandlerAdapter ，这两个有一个简化的写法，如下：
-    ```
+    ```xml
     <mvc:annotation-driven>
     ```
     可以用这一行配置，代替 RequestMappingHandlerMapping 和 RequestMappingHandlerAdapter 的两行配置。
-    ```
+    ```xml
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

@@ -9,7 +9,7 @@ DispatcherServlet 是前端控制器设计模式的实现，提供 Spring Web MV
 * 如果执行过程中遇到异常将交给 HandlerExceptionResolver 来解析
 
 # 2.DispatcherServlet配置详解
-```
+```xml
 <servlet>
     <servlet-name>springmvc</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -40,7 +40,7 @@ DispatcherServlet 是前端控制器设计模式的实现，提供 Spring Web MV
 之前的案例中，只有 SpringMVC，没有 Spring，Web 项目也是可以运行的。在实际开发中，Spring 和 SpringMVC 是分开配置的，所以我们对上面的项目继续进行完善，添加 Spring 相关配置。
 
 首先，项目添加一个 service 包，提供一个 HelloService 类，如下：
-```
+```java
    @Service
    public class HelloService {
        public String hello(String name) {
@@ -50,7 +50,7 @@ DispatcherServlet 是前端控制器设计模式的实现，提供 Spring Web MV
 ```
 
 现在，假设我需要将 HelloService 注入到 Spring 容器中并使用它，这个是属于 Spring 层的 Bean，所以我们一般将除了 Controller 之外的所有 Bean 注册到 Spring 容器中，而将 Controller 注册到 SpringMVC 容器中，现在，在 resources 目录下添加 applicationContext.xml 作为 spring 的配置：
-```$xslt
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -65,7 +65,7 @@ DispatcherServlet 是前端控制器设计模式的实现，提供 Spring Web MV
 ```
 
 但是，这个配置文件，默认情况下，并不会被自动加载，所以，需要我们在 web.xml 中对其进行配置：
-```$xslt
+```xml
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:applicationContext.xml</param-value>
@@ -81,7 +81,7 @@ DispatcherServlet 是前端控制器设计模式的实现，提供 Spring Web MV
 * contextClass：表示用于加载 Bean 的 ApplicationContext 实现类，默认 WebApplicationContext。
 
 配置完成之后，还需要修改 MyController，在 MyController 中注入 HelloSerivce:
-```$xslt
+```java
 @org.springframework.stereotype.Controller("/hello")
 public class MyController implements Controller {
     @Autowired
@@ -109,7 +109,7 @@ public class MyController implements Controller {
 
 最后，修改 SpringMVC 的配置文件，将 Bean 配置为扫描形式：
 
-```
+```xml
 <context:component-scan base-package="org.javaboy.helloworld" use-default-filters="false">
     <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 </context:component-scan>
