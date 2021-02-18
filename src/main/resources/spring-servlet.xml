@@ -26,7 +26,7 @@
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" id="handlerAdapter"/>
     -->
     <!--代替 RequestMappingHandlerMapping 和 RequestMappingHandlerAdapter 的两行配置-->
-    <mvc:annotation-driven conversion-service="conversionService"/>
+    <mvc:annotation-driven validator="validatorFactoryBean" conversion-service="conversionService"/>
     <bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean" id="conversionService">
         <property name="converters">
             <set>
@@ -70,7 +70,7 @@
         <!--内存中最大的数据量，超过这个数据量，数据就要开始往硬盘中写了-->
         <property name="maxInMemorySize" value="4096"/>
         <!--临时目录，超过 maxInMemorySize 配置的大小后，数据开始往临时目录写，等全部上传完成后，再将数据合并到正式的文件上传目录-->
-        <property name="uploadTempDir" value="file:///E:\\tmp"/>
+        <property name="uploadTempDir" value="file:///D:\\tmp"/>
     </bean>
 
     <!--在 SpringMVC 中，静态资源默认都是被自动拦截的，无法访问，意味着上传成功的图片无法访问，
@@ -85,4 +85,26 @@
     <bean class="org.springframework.web.multipart.support.StandardServletMultipartResolver" id="multipartResolver">
     </bean>
     -->
+
+    <!--异常处理配置
+    配置时，提供一个 LocalValidatorFactoryBean 的实例，然后 Bean 的校验使用 HibernateValidator。-->
+    <bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" id="validatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+        <property name="validationMessageSource" ref="bundleMessageSource"/>
+    </bean>
+    <!--定义错误提示文本，在 resources 目录下新建一个 MyMessage.properties 文件
+    SpringMVC 配置中，加载这个配置文件
+    -->
+    <bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+          id="bundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>classpath:MyMessage</value>
+            </list>
+        </property>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="cacheSeconds" value="300"/>
+    </bean>
+<!--    <mvc:annotation-driven validator="validatorFactoryBean"/>-->
+
 </beans>
