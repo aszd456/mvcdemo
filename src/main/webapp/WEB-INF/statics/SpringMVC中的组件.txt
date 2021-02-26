@@ -1,0 +1,5 @@
+1.DispatcherServlet：前端控制器
+    用户请求到达前端控制器，它就相当于 mvc 模式中的c，DispatcherServlet 是整个流程控制的中心，
+    相当于是 SpringMVC 的大脑，由它调用其它组件处理用户的请求，DispatcherServlet 的存在降低了组件之间的耦合性。
+
+2.HandlerMapping：处理器映射器
