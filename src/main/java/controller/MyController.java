@@ -1,7 +1,9 @@
 package controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+import service.HelloService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
  * @Version 1.0
  **/
 public class MyController implements Controller {
+
+    @Autowired
+    HelloService helloService;
     /**
      * 这就是一个请求处理接口
      *
