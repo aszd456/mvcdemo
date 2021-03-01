@@ -1,9 +1,9 @@
-package controller;
+package org.test.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
-import service.HelloService;
+import org.test.service.HelloService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Date 2021/2/26 9:26
  * @Version 1.0
  **/
+@org.springframework.stereotype.Controller("/hello")
 public class MyController implements Controller {
 
     @Autowired

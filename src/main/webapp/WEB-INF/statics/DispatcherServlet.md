@@ -102,3 +102,63 @@ public class MyController implements Controller {
 }
 
 ```
+
+注意
+
+为了在 SpringMVC 容器中能够扫描到 MyController ，这里给 MyController 添加了 @Controller 注解，同时，由于我们目前采用的 HandlerMapping 是 BeanNameUrlHandlerMapping（意味着请求地址就是处理器 Bean 的名字），所以，还需要手动指定 MyController 的名字。
+
+最后，修改 SpringMVC 的配置文件，将 Bean 配置为扫描形式：
+
+```
+<context:component-scan base-package="org.javaboy.helloworld" use-default-filters="false">
+    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+</context:component-scan>
+<!--这个是处理器映射器，这种方式，请求地址其实就是一个 Bean 的名字，然后根据这个 bean 的名字查找对应的处理器-->
+<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" id="handlerMapping">
+    <property name="beanName" value="/hello"/>
+</bean>
+<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" id="handlerAdapter"/>
+<!--视图解析器-->
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="viewResolver">
+    <property name="prefix" value="/jsp/"/>
+    <property name="suffix" value=".jsp"/>
+</bean>
+
+```
+配置完成后，再次启动项目，Spring 容器也将会被创建。访问 /hello 接口，HelloService 中的 hello 方法就会自动被调用。
+
+```markdown
+use-default-filters 属性的默认值为 true，即使用默认的 Filter 进行包扫描，
+而默认的 Filter 对标有 @Service,@Controller和@Repository 的注解的类进行扫描，
+因为前面说过，我们希望 SpringMVC 只来控制网站的跳转逻辑，
+所以我们只希望 SpringMVC 的配置扫描 @Controllerce 注解标注的类，
+不希望它扫描其余注解标注的类，所以设置了 use-default-filters 为 false，
+并使用 context:include-filter 子标签设置其只扫描带有 @Controller 注解标注的类。
+而 Spring 就不同了，我们希望 Spring 只不扫描带有 @Controller 注解标注的类，
+而扫描其他注解标注的类，而这时建立在使用默认的 Filter 进行扫描的基础上，
+设置了 context:exclude-filter 标签，不扫描 @Controller 注解标注的类，
+所以不应该设置 use-default-filters 为 false
+```
+
+# 4 两个容器
+当 Spring 和 SpringMVC 同时出现，我们的项目中将存在两个容器，一个是 Spring 容器，
+另一个是 SpringMVC 容器，Spring 容器通过 ContextLoaderListener 来加载，
+SpringMVC 容器则通过 DispatcherServlet 来加载，这两个容器不一样：
+
+从图中可以看出：
+* ContextLoaderListener 初始化的上下文加载的 Bean 是对于整个应用程序共享的，
+不管是使用什么表现层技术，一般如 DAO 层、Service 层 Bean；
+
+* DispatcherServlet 初始化的上下文加载的 Bean 是只对 Spring Web MVC 有效的 Bean，
+如 Controller、HandlerMapping、HandlerAdapter 等等，
+该初始化上下文应该只加载 Web相关组件。
+
+
+### 1.为什么不在 Spring 容器中扫描所有 Bean？
+    这个是不可能的。因为请求达到服务端后，找 DispatcherServlet 去处理，
+    只会去 SpringMVC 容器中找，这就意味着 Controller 必须在 SpringMVC 容器中扫描。
+
+### 为什么不在 SpringMVC 容器中扫描所有 Bean？
+    这个是可以的，可以在 SpringMVC 容器中扫描所有 Bean。不写在一起，有两个方面的原因：
+    1. 为了方便配置文件的管理
+    2. 在 Spring+SpringMVC+Hibernate 组合中，实际上也不支持这种写法     
