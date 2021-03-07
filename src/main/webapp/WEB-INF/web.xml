@@ -9,6 +9,18 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath:spring-servlet.xml</param-value>
         </init-param>
+        <!--
+        <multipart-config>
+            文件保存的临时目录，这个目录系统不会主动创建
+            <location>E:\\temp</location>
+            上传的单个文件大小
+            <max-file-size>1048576</max-file-size>
+            上传的总文件大小
+            <max-request-size>1048576</max-request-size>
+            这个就是内存中保存的文件最大大小
+            <file-size-threshold>4096</file-size-threshold>
+        </multipart-config>
+        -->
     </servlet>
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
@@ -42,5 +54,8 @@
         <filter-name>encoding</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <welcome-file-list>
+        <welcome-file>/WEB-INF/views/hello3.jsp</welcome-file>
+    </welcome-file-list>
 
 </web-app>

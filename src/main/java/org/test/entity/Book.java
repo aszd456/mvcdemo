@@ -1,23 +1,35 @@
 package org.test.entity;
 
+import java.util.Date;
+
 /**
  * @Author: zhouliansheng
  * @Date: 2021/3/5 1:03
  */
 public class Book {
     private String name;
-    private String author;
+    private Author author;
     private Double price;
     private Boolean ispublic;
+    private Date time;
 
     @Override
     public String toString() {
         return "Book{" +
                 "name='" + name + '\'' +
-                ", author='" + author + '\'' +
+                ", author=" + author +
                 ", price=" + price +
                 ", ispublic=" + ispublic +
+                ", time=" + time +
                 '}';
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public String getName() {
@@ -28,11 +40,11 @@ public class Book {
         this.name = name;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 

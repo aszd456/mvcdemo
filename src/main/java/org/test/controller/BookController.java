@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.test.entity.Book;
+import org.test.entity.MyClass;
+
+import java.util.Arrays;
 
 /**
  * @Author: zhouliansheng
@@ -16,7 +19,7 @@ public class BookController {
 
     @RequestMapping("/book")
     public String addBook() {
-        return "addbook";
+        return "book";
     }
 
     /**
@@ -93,16 +96,21 @@ public class BookController {
     /**
      * 前端页面传值的时候和上面的一样，只需要写属性名就可以了，不需要写 book 对象名
      * ook 对象中，有一个 Author 属性，前端传值参考book.jsp
+     *
      * @param book
      */
     @RequestMapping(value = "/doAdd4", method = RequestMethod.POST)
     @ResponseBody
-    public void doAdd4(Book book) {
+    public void doAdd4(Book book, String[] favorites) {
         System.out.println(book);
+        System.out.println(String.join(",", favorites));
     }
 
-    ////.4 自定义参数绑定
-
+    @RequestMapping("/addClass")
+    @ResponseBody
+    public void addClass(MyClass myClass) {
+        System.out.println(myClass);
+    }
 
 
 }
