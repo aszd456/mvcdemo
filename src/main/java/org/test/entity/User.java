@@ -1,5 +1,7 @@
 package org.test.entity;
 
+import java.util.List;
+
 /**
  * @Author: zhouliansheng
  * @Date: 2021/3/9 23:50
@@ -8,6 +10,15 @@ public class User {
     private int id;
     private String username;
     private String address;
+    private List<String> favorites;
+
+    public List<String> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<String> favorites) {
+        this.favorites = favorites;
+    }
 
     public int getId() {
         return id;

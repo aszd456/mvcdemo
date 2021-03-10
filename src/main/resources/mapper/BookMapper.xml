@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.test.mapper.BookMapper">
+    <resultMap id="BookWithAuthor" type="org.test.entity.Book">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <association property="author" javaType="org.test.entity.Author">
+            <id column="aid" property="id"/>
+            <result column="aname" property="name"/>
+            <result column="aage" property="age"/>
+        </association>
+    </resultMap>
+    <select id="getBookById" resultMap="BookWithAuthor">
+        SELECT b.*,a.`age` AS aage,a.`id` AS aid,a.`name` AS aname
+        FROM book b,author a
+        WHERE b.`aid`=a.`id` AND b.`id`=#{id}
+    </select>
+</mapper>        

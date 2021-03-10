@@ -1,7 +1,5 @@
 package org.test.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.util.Date;
 
 /**
@@ -9,10 +7,11 @@ import java.util.Date;
  * @Date: 2021/3/5 1:03
  */
 public class Book {
+    private int id;
     private String name;
     private Author author;
     private Double price;
-    private Boolean ispublic;
+    private Boolean republic;
     private Date time;
 
     @Override
@@ -21,9 +20,17 @@ public class Book {
                 "name='" + name + '\'' +
                 ", author=" + author +
                 ", price=" + price +
-                ", ispublic=" + ispublic +
+                ", ispublic=" + republic +
                 ", time=" + time +
                 '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Date getTime() {
@@ -58,12 +65,12 @@ public class Book {
         this.price = price;
     }
 
-    public Boolean getIspublic() {
-        return ispublic;
+    public Boolean getRepublic() {
+        return republic;
     }
 
-    public void setIspublic(Boolean ispublic) {
-        this.ispublic = ispublic;
+    public void setRepublic(Boolean republic) {
+        this.republic = republic;
     }
 }
 

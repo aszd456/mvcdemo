@@ -3,7 +3,83 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.test.mapper.UserMapper">
+    <!--    parameterType 表示传入的参数类型,参数都是通过 # 来引用-->
+    <insert id="addUser" parameterType="org.test.entity.User">
+        insert into user (username,address) values (#{username},#{address});
+    </insert>
+    <!--    使用 UUID 做主键
+    注意，这个实验需要先将数据的 ID 类型改为 varchar
+    selectKey 表示查询 key
+    keyProperty 属性表示将查询的结果赋值给传递进来的 User 对象的 id 属性
+    resultType 表示查询结果的返回类型
+    order 表示这个查询操作的执行时机，BEFORE 表示这个查询操作在 insert 之前执行
+    在 selectKey 节点的外面定义 insert 操作
+    -->
+    <insert id="addUser2" parameterType="org.test.entity.User">
+        <selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE">
+            select uuid();
+        </selectKey>
+        insert into user (id,username,address) values (#{id},#{username},#{address});
+    </insert>
+    <insert id="batchInsertUser">
+        insert into user (username,address) values
+        <foreach collection="users" separator="," item="user">
+            (#{user.username},#{user.address})
+        </foreach>
+    </insert>
+    <insert id="addUser3" parameterType="user">
+        insert into user (username,address,favorites) values
+        (#{username},#{address},#{favorites,typeHandler=org.test.handler.List2VarcharHandler});
+    </insert>
+    <update id="updateUser" parameterType="org.test.entity.User">
+        update user set username = #{username} where id=#{id};
+    </update>
+    <update id="updateUser2" parameterType="org.test.entity.User">
+        update user
+        <set>
+            <if test="username!=null">
+                username = #{username},
+            </if>
+            <if test="address!=null">
+                address=#{address},
+            </if>
+            <if test="favorites!=null">
+                favorites=#{favorites},
+            </if>
+        </set>
+        where id=#{id};
+    </update>
+    <delete id="deleteUserById" parameterType="java.lang.Integer">
+        delete from user where id=#{id}
+    </delete>
     <select id="getUserById" resultType="org.test.entity.User">
         select * from user where id = #{id};
     </select>
+    <select id="getAllUser" resultType="org.test.entity.User">
+        select * from user;
+    </select>
+    <select id="getUserByPage" resultType="org.test.entity.User">
+        select * from user
+        <if test="start !=null and count!=null">
+            limit #{start},#{count}
+        </if>
+    </select>
+    <select id="getUserByUsernameAndId" resultType="org.test.entity.User">
+        select * from user
+        <where>
+            <if test="id!=null">
+                and id>#{id}
+            </if>
+            <if test="name!=null">
+                and username like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+    <select id="getUserByIds" resultType="org.test.entity.User">
+        select * from user where id in
+        <foreach collection="ids" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
 </mapper>
