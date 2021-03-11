@@ -1,6 +1,7 @@
 package org.test.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.test.entity.Role;
 import org.test.entity.User;
 
 import java.util.List;
@@ -34,5 +35,11 @@ public interface UserMapper {
     Integer batchInsertUser(@Param("users") List<User> users);
 
     Integer updateUser2(User user);
+
+    User getUserById2(int id);
+
+    User getUserById3(int id);
+
+    List<Role> getRolesByUid(Integer id);
 
 }

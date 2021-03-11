@@ -81,5 +81,36 @@
             #{id}
         </foreach>
     </select>
+    <!-- 在 resultMap 中，通过 collection 节点来描述集合的映射关系。在映射时，会自动将一的一方数据集合并，
+    然后将多的一方放到集合中，能实现这一点，靠的就是 id 属性。-->
+    <resultMap id="UserWithRole" type="org.test.entity.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <collection property="roles" ofType="org.test.entity.Role">
+            <id property="id" column="rid"/>
+            <result property="name" column="rname"/>
+            <result property="nameZh" column="rnameZH"/>
+        </collection>
+    </resultMap>
+    <select id="getUserById2" resultType="org.test.entity.User">
+        SELECT u.*,r.`id` AS rid,r.`name` AS rname,r.`nameZh` AS rnameZh FROM USER u,role r,user_role ur
+        WHERE u.`id`=ur.`uid` AND ur.`rid`=r.`id` AND u.`id`=#{id}
+    </select>
+
+    <!--    懒加载-->
+    <resultMap id="UserWithRole2" type="org.test.entity.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <collection property="roles" select="org.test.mapper.UserMapper.getRolesByUid" column="id" fetchType="lazy">
+        </collection>
+    </resultMap>
+    <select id="getRolesByUid" resultType="org.test.entity.Role">
+        SELECT r.* FROM role r,user_role ur WHERE r.`id`=ur.`rid` AND ur.`uid`=#{id}
+    </select>
+    <select id="getUserById3" resultType="org.test.entity.User">
+        select * from user where id=#{id};
+    </select>
 
 </mapper>
