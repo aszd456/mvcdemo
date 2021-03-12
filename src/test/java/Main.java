@@ -1,16 +1,23 @@
+import org.apache.ibatis.datasource.pooled.PooledDataSourceFactory;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.test.entity.User;
 import org.test.mapper.UserMapper;
 import org.test.utils.SqlSessionFactoryUtils;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @Author: zhouliansheng
@@ -50,7 +57,7 @@ public class Main {
     }
 
     @Test
-    public void deleteUserById(){
+    public void deleteUserById() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         int delete = sqlSession.delete("org.test.mapper.UserMapper.deleteUserById", 2);
         System.out.println(delete);
@@ -59,7 +66,7 @@ public class Main {
     }
 
     @Test
-    public void updateUser(){
+    public void updateUser() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         User user = new User();
         user.setId(2);
@@ -71,7 +78,7 @@ public class Main {
     }
 
     @Test
-    public void getAllUser(){
+    public void getAllUser() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         //List<User> list = sqlSession.selectList("org.test.mapper.UserMapper.getAllUser");
@@ -82,7 +89,7 @@ public class Main {
     }
 
     @Test
-    public void getUserByPage(){
+    public void getUserByPage() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         List<User> list = mapper.getUserByPage(null, null);
@@ -93,7 +100,7 @@ public class Main {
     }
 
     @Test
-    public void getUserByUsernameAndId(){
+    public void getUserByUsernameAndId() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         List<User> list = mapper.getUserByUsernameAndId(2, "java");
@@ -108,7 +115,7 @@ public class Main {
     }
 
     @Test
-    public void batchInsertUser(){
+    public void batchInsertUser() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         List<User> users = new ArrayList<>();
@@ -126,7 +133,7 @@ public class Main {
     }
 
     @Test
-    public void addUser3(){
+    public void addUser3() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         User user = new User();
@@ -140,6 +147,38 @@ public class Main {
         mapper.addUser3(user);
         sqlSession.commit();
         sqlSession.close();
+    }
+
+    /**
+     * 不使用 XML 构建 SqlSessionFactory
+     */
+    public void build() {
+        Properties properties = new Properties();
+        properties.setProperty("driver", "com.mysql.jdbc.Driver");
+        properties.setProperty("url", "jdbc:mysql://127.0.0.1:3306/mybatisdemo");
+        properties.setProperty("username", "root");
+        properties.setProperty("password", "123456");
+        PooledDataSourceFactory pooledDataSourceFactory = new PooledDataSourceFactory();
+        pooledDataSourceFactory.setProperties(properties);
+        DataSource dataSource = pooledDataSourceFactory.getDataSource();
+        TransactionFactory transactionFactory = new JdbcTransactionFactory();
+        Environment environment = new Environment("development", transactionFactory, dataSource);
+        Configuration configuration = new Configuration(environment);
+        configuration.addMapper(UserMapper.class);
+        SqlSessionFactory sqlSessionFactory2 = new SqlSessionFactoryBuilder().build(configuration);
+
+//        从 SqlSessionFactory 中获取 SqlSession
+        try (SqlSession session = sqlSessionFactory2.openSession()) {
+            User user = session.selectOne("org.test.mapper.UserMapper.getUserById", 2);
+
+        }
+//        诚然，这种方式能够正常工作，对使用旧版本 MyBatis 的用户来说也比较熟悉。
+//        但现在有了一种更简洁的方式——使用和指定语句的参数和返回值相匹配的接口（比如 BlogMapper.class），
+//        现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            User user = mapper.getUserById(2);
+        }
     }
 
 

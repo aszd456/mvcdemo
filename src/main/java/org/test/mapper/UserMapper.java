@@ -1,6 +1,7 @@
 package org.test.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.test.entity.Role;
 import org.test.entity.User;
 
@@ -13,6 +14,9 @@ import java.util.List;
 public interface UserMapper {
 
     User getUserById(int id);
+
+    @Select("SELECT * FROM blog WHERE id = #{id}")
+    User selectUser(int id);
 
     int addUser(String username, String address);
 
