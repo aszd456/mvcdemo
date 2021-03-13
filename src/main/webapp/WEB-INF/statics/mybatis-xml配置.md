@@ -15,14 +15,14 @@
     * mappers（映射器）
     
 ### 属性（properties）
-```
+```xml
 <properties resource="org/mybatis/example/config.properties">
   <property name="username" value="dev_user"/>
   <property name="password" value="F2Fa3!33TYyg"/>
 </properties>
 ```
 设置好的属性可以在整个配置文件中用来替换需要动态配置的属性值
-```
+```xml
 <dataSource type="POOLED">
   <property name="driver" value="${driver}"/>
   <property name="url" value="${url}"/>
@@ -31,7 +31,7 @@
 </dataSource>
 ```
 也可以在 SqlSessionFactoryBuilder.build() 方法中传入属性值
-```
+```java
 SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ```
@@ -325,7 +325,7 @@ public interface TransactionFactory {
 ```   
 
 
-#### 在事务管理器实例化后，所有在 XML 中配置的属性将会被传递给 setProperties() 方法。你的实现还需要创建一个 Transaction 接口的实现类
+在事务管理器实例化后，所有在 XML 中配置的属性将会被传递给 setProperties() 方法。你的实现还需要创建一个 Transaction 接口的实现类
 
 ```java
 public interface Transaction {
@@ -335,4 +335,71 @@ public interface Transaction {
   void close() throws SQLException;
   Integer getTimeout() throws SQLException;
 }
+```
+#### 数据源（dataSource）
+dataSource 元素使用标准的 JDBC 数据源接口来配置 JDBC 连接对象的资源。
+
+大多数 MyBatis 应用程序会按示例中的例子来配置数据源。虽然数据源配置是可选的，但如果要启用延迟加载特性，就必须配置数据源。
+有三种内建的数据源类型（也就是 type="[UNPOOLED|POOLED|JNDI]"）：
+
+POOLED– 这种数据源的实现利用“池”的概念将 JDBC 连接对象组织起来，避免了创建新的连接实例时所必需的初始化和认证时间。 这种处理方式很流行，能使并发 Web 应用快速响应请求。
+
+可以通过实现接口 org.apache.ibatis.datasource.DataSourceFactory 来使用第三方数据源实现：
+```java
+public interface DataSourceFactory {
+  void setProperties(Properties props);
+  DataSource getDataSource();
+}
+```
+org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory 可被用作父类来构建新的数据源适配器，比如下面这段插入 C3P0 数据源所必需的代码：
+```java
+public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
+
+   public C3P0DataSourceFactory() {
+      this.dataSource = new ComboPooledDataSource();
+   }
+}
+```
+为了令其工作，记得在配置文件中为每个希望 MyBatis 调用的 setter 方法增加对应的属性。 下面是一个可以连接至 PostgreSQL 数据库的例子：
+```xml
+<dataSource type="org.myproject.C3P0DataSourceFactory">
+  <property name="driver" value="org.postgresql.Driver"/>
+  <property name="url" value="jdbc:postgresql:mydb"/>
+  <property name="username" value="postgres"/>
+  <property name="password" value="root"/>
+</dataSource>
+```
+
+### 映射器（mappers）
+既然 MyBatis 的行为已经由上述元素配置完了，我们现在就要来定义 SQL 映射语句了。 但首先，我们需要告诉 MyBatis 到哪里去找到这些语句。 在自动查找资源方面，Java 并没有提供一个很好的解决方案，所以最好的办法是直接告诉 MyBatis 到哪里去找映射文件。 你可以使用相对于类路径的资源引用，或完全限定资源定位符（包括 file:/// 形式的 URL），或类名和包名等。例如：
+
+```xml
+<!-- 使用相对于类路径的资源引用 -->
+<mappers>
+  <mapper resource="org/mybatis/builder/AuthorMapper.xml"/>
+  <mapper resource="org/mybatis/builder/BlogMapper.xml"/>
+  <mapper resource="org/mybatis/builder/PostMapper.xml"/>
+</mappers>
+```
+```xml
+<!-- 使用完全限定资源定位符（URL） -->
+<mappers>
+  <mapper url="file:///var/mappers/AuthorMapper.xml"/>
+  <mapper url="file:///var/mappers/BlogMapper.xml"/>
+  <mapper url="file:///var/mappers/PostMapper.xml"/>
+</mappers>
+```
+```xml
+<!-- 使用映射器接口实现类的完全限定类名 -->
+<mappers>
+  <mapper class="org.mybatis.builder.AuthorMapper"/>
+  <mapper class="org.mybatis.builder.BlogMapper"/>
+  <mapper class="org.mybatis.builder.PostMapper"/>
+</mappers>
+```
+```xml
+<!-- 将包内的映射器接口实现全部注册为映射器 -->
+<mappers>
+  <package name="org.mybatis.builder"/>
+</mappers>
 ```
