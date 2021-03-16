@@ -24,6 +24,13 @@ import java.util.Properties;
  * @Date: 2021/3/10 0:04
  */
 public class Main {
+    /**
+     * MyBatis 初始化基本过程：
+     * SqlSessionFactoryBuilder  根据传入的输入流生成Configuration  对
+     * 象，然后根据Configuration对象创建默认的SqlSessionFactory实例。
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml"));
         SqlSession sqlSession = factory.openSession();
