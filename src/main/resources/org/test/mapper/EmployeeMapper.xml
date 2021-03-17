@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.test.mapper.EmployeeMapper">
+    <update id="updateEmployeeIfNecessary" parameterType="org.test.entity.Employee">
+        update tb_employee
+        <set>
+            <if test="loginName!=null">
+                login_name=#{loginName}
+            </if>
+            <if test="state!=null">
+                state=#{state}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <select id="selectEmployeeByIdLike" resultType="org.test.entity.Employee">
+        select * from employee where state='ACTIVE'
+        <if test="id!=null">
+            and id=#{id}
+        </if>
+    </select>
+    <select id="selectEmployeeByLoginLike" resultType="org.test.entity.Employee">
+        select * from employee where state='ACTIVE'
+        <if test="loginName!=null and password!=null">
+            and login_name=#{loginName} and password=#{password}
+        </if>
+    </select>
+    <select id="selectEmployeeChoose" resultType="org.test.entity.Employee">
+        select * from employee where state='ACTIVE'
+        <choose>
+            <when test="id!=null">
+                and id=#{id}
+            </when>
+            <when test="loginName!=null and password!=null">
+                and login_name=#{loginName} and password=#{password}
+            </when>
+            <otherwise>
+                and sex='男'
+            </otherwise>
+        </choose>
+    </select>
+    <select id="selectEmployeeLike" resultType="org.test.entity.Employee">
+        select * from employee
+        <where>
+            <if test="state!=null">
+                state=#{state}
+            </if>
+            <if test="id!=null">
+                and id=#{id}
+            </if>
+            <if test="loginName!=null and password!=null">
+                and login_name=#{loginName} and password=#{password}
+            </if>
+        </where>
+    </select>
+    <select id="selectEmployeeWithId" resultType="org.test.entity.Employee">
+        select * from employee where id=#{id}
+    </select>
+    <select id="selectEmployeeIn" resultType="org.test.entity.Employee">
+        select * from employee where id in
+        <foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    <select id="selectEmployeeLikeName" resultType="org.test.entity.Employee">
+        <bind name="pattern" value="'%'+_parameter.getUserName()+'%'"/>
+        select * from employee where user_name like #{pattern}
+    </select>
+</mapper>

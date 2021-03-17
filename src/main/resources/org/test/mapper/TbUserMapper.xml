@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.test.mapper.TbUserMapper">
+    <select id="selectUserById" resultMap="userResultMap">
+        select * from tb_user where id=#{id}
+    </select>
+    <resultMap id="userResultMap" type="TbUser">
+        <id property="id" column="id"/>
+        <result column="user_name" property="userName"/>
+        <result column="login_name" property="loginName"/>
+        <result column="password" property="password"/>
+        <result column="phone" property="phone"/>
+        <result column="address" property="address"/>
+        <!-- 一对多-->
+        <collection property="orders" javaType="ArrayList" column="id" ofType="TbUser"
+                    select="org.test.mapper.OrderMapper.selectOrderByUserId" fetchType="lazy">
+            <id column="id" property="id"/>
+            <result column="code" property="code"/>
+            <result column="total" property="total"/>
+        </collection>
+    </resultMap>
+</mapper>

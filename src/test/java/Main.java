@@ -9,14 +9,8 @@ import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.Before;
 import org.junit.Test;
-import org.test.entity.Clazz;
-import org.test.entity.Person;
-import org.test.entity.TbStudent;
-import org.test.entity.User;
-import org.test.mapper.ClazzMapper;
-import org.test.mapper.PersonMapper;
-import org.test.mapper.StudentMapper;
-import org.test.mapper.UserMapper;
+import org.test.entity.*;
+import org.test.mapper.*;
 import org.test.utils.SqlSessionFactoryUtils;
 
 import javax.sql.DataSource;
@@ -212,6 +206,29 @@ public class Main {
         TbStudent student = studentMapper.selectStudentById(1);
         System.out.println(student);
         sqlSession.close();
+    }
+
+    @Test
+    public void OneToManyTest(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        TbUserMapper tbUserMapper = sqlSession.getMapper(TbUserMapper.class);
+        TbUser tbUser = tbUserMapper.selectUserById(1);
+        System.out.println(tbUser);
+        List<Order> orders = tbUser.getOrders();
+        orders.forEach(System.out::println);
+        sqlSession.close();
+    }
+
+    @Test
+    public void manyToMany(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        OrderMapper orderMapper = sqlSession.getMapper(OrderMapper.class);
+        Order order = orderMapper.selectOrderById(2);
+        System.out.println(order);
+        TbUser tbUser = order.getTbUser();
+        System.out.println(tbUser);
+        List<Article> articles = order.getArticleList();
+        articles.forEach(System.out::println);
     }
 
     /**
