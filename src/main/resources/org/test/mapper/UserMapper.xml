@@ -27,7 +27,7 @@
             (#{user.username},#{user.address})
         </foreach>
     </insert>
-    <insert id="addUser3" parameterType="user">
+    <insert id="addUser3" parameterType="user" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into user (username,address,favorites) values
         (#{username},#{address},#{favorites,typeHandler=org.test.handler.List2VarcharHandler});
     </insert>
@@ -103,7 +103,7 @@
         <id column="id" property="id"/>
         <result column="username" property="username"/>
         <result column="password" property="password"/>
-        <collection property="roles" select="org.test.mapper.UserMapper.getRolesByUid" column="id" fetchType="lazy">
+        <collection property="roles" select="getRolesByUid" column="id" fetchType="lazy">
         </collection>
     </resultMap>
     <select id="getRolesByUid" resultType="org.test.entity.Role">
@@ -111,6 +111,10 @@
     </select>
     <select id="getUserById3" resultType="org.test.entity.User">
         select * from user where id=#{id};
+    </select>
+    <sql id="userColumns">${alias}.id,${alias}.username,${alias}.password</sql>
+    <select id="selectUsers" resultType="org.test.entity.User">
+        select <include refid="userColumns"><property name="alias" value="t1"/></include> from user t1
     </select>
 
 </mapper>

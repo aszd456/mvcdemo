@@ -46,4 +46,6 @@ public interface UserMapper {
 
     List<Role> getRolesByUid(Integer id);
 
+    List<User> selectUsers();
+
 }

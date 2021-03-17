@@ -10,6 +10,7 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="logImpl" value="LOG4J"/>
     </settings>
     <typeAliases>
         <package name="org.test.entity"/>
@@ -29,6 +30,10 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="mapper/UserMapper.xml"/>
+<!--        <mapper resource="mapper/UserMapper.xml"/>-->
+<!--        <mapper resource="mapper/BookMapper.xml"/>-->
+<!--        <mapper resource="mapper/CardMapper.xml"/>-->
+<!--        <mapper resource="mapper/PersonMapper.xml"/>-->
+        <package name="org.test.mapper"/>
     </mappers>
 </configuration>

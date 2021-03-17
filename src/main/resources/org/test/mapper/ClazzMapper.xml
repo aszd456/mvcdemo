@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.test.mapper.ClazzMapper">
+    <select id="selectClazzById" resultMap="clazzResultMap">
+        select * from tb_clazz where id=#{id}
+    </select>
+    <resultMap id="clazzResultMap" type="Clazz">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <!--一对多映射 fetchType="lazy" 表示懒加载-->
+        <!--select属性表示会使用column属性的id值作
+        为参数执行StudentMapper中定义的selectStudentByClazzId查询该班级对
+        应的所有学生数据，查询出的数据将被封装到property表示的students对
+        象当中-->
+        <!--    在实际开发中，一对多关系通常映射为集合对象，而由于多方的数-->
+        <!--    据量可能很大，所以通常使用懒加载；而多对一只是关联到一个对象，-->
+        <!--    所以通常使用多表连接直接把数据提取出来-->
+        <collection property="students" javaType="ArrayList" column="id" ofType="TbStudent"
+                    select="org.test.mapper.StudentMapper.selectStudentByClazzId" fetchType="lazy">
+            <id property="id" column="id"/>
+            <result property="sex" column="sex"/>
+            <result property="name" column="name"/>
+            <result property="age" column="age"/>
+        </collection>
+    </resultMap>
+</mapper>

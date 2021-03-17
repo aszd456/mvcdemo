@@ -9,13 +9,20 @@ import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.test.entity.Clazz;
+import org.test.entity.Person;
+import org.test.entity.TbStudent;
 import org.test.entity.User;
+import org.test.mapper.ClazzMapper;
+import org.test.mapper.PersonMapper;
+import org.test.mapper.StudentMapper;
 import org.test.mapper.UserMapper;
 import org.test.utils.SqlSessionFactoryUtils;
 
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -28,6 +35,7 @@ public class Main {
      * MyBatis 初始化基本过程：
      * SqlSessionFactoryBuilder  根据传入的输入流生成Configuration  对
      * 象，然后根据Configuration对象创建默认的SqlSessionFactory实例。
+     *
      * @param args
      * @throws IOException
      */
@@ -37,6 +45,30 @@ public class Main {
         User user = sqlSession.selectOne("org.test.mapper.UserMapper.getUserById", 1);
         System.out.println(user.getUsername());
         sqlSession.close();
+    }
+
+    @Test
+    public void main2() {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = SqlSessionFactoryUtils.getInstance().openSession();
+            User user = new User();
+            user.setUsername("傻逼");
+            user.setAddress("123456");
+            user.setFavorites(Arrays.asList("11", "22"));
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.addUser3(user);
+            sqlSession.commit();
+        } catch (Exception e) {
+            if (sqlSession != null) {
+                sqlSession.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
     }
 
     SqlSessionFactory sqlSessionFactory;
@@ -153,6 +185,32 @@ public class Main {
         user.setFavorites(favorites);
         mapper.addUser3(user);
         sqlSession.commit();
+        sqlSession.close();
+    }
+    @Test
+    public void ontToOne(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+        Person person = personMapper.selectPersonById(1);
+        System.out.println(person);
+        sqlSession.close();
+    }
+
+    @Test
+    public void testSelectClazzById(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        ClazzMapper clazzMapper = sqlSession.getMapper(ClazzMapper.class);
+        Clazz clazz = clazzMapper.selectClazzById(1);
+        System.out.println(clazz);
+        sqlSession.close();
+    }
+
+    @Test
+    public void testSelectStudentById(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
+        TbStudent student = studentMapper.selectStudentById(1);
+        System.out.println(student);
         sqlSession.close();
     }
 

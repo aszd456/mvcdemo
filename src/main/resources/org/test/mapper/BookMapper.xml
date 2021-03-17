@@ -23,7 +23,7 @@
 <!--    懒加载-->
     <resultMap id="BookWithAuthor2" type="org.test.entity.Book" extends="BaseResultMap">
         <association property="author" javaType="org.test.entity.Author"
-                     select="org.test.mapper.BookMapper.getAuthorById" column="aid" fetchType="lazy"/>
+                     select="getAuthorById" column="aid" fetchType="lazy"/>
     </resultMap>
     <select id="getBookById2" resultType="org.test.entity.Book">
         select * from book where id=#{id};
