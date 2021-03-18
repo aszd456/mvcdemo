@@ -1,6 +1,6 @@
 package org.test.mapper;
 
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 import org.test.entity.Employee;
 
 import java.util.HashMap;
@@ -26,4 +26,27 @@ public interface EmployeeMapper {
     List<Employee> selectEmployeeIn(@Param("ids") List<Integer> ids);
 
     List<Employee> selectEmployeeLikeName(Employee employee);
+
+    /**
+     * 可以传对象
+     *
+     * @param params
+     * @return
+     */
+    @SelectProvider(type = EmployeeDynaSqlProvider.class, method = "selectWhitParam")
+    @Results({
+            @Result(id = true, property = "id", column = "id"),
+            @Result(property = "age", column = "age")
+    })
+    List<Employee> selectWithParams(HashMap<String, Object> params);
+
+    @InsertProvider(type = EmployeeDynaSqlProvider.class, method = "insertEmployee")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int insertEmployee(Employee employee);
+
+    @UpdateProvider(type = EmployeeDynaSqlProvider.class, method = "updateEmployee")
+    int updateEmployee(Employee employee);
+
+    @DeleteProvider(type = EmployeeDynaSqlProvider.class, method = "deleteEmployee")
+    int deleteEmployee(int id);
 }

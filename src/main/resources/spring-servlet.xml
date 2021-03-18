@@ -152,4 +152,16 @@
         </property>
     </bean>
     -->
+    <!--springmvc 自定义拦截器
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <ref bean="myInterceptor1"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="org.test.common.MyInterceptor2"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    -->
 </beans>

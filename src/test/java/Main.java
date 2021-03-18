@@ -181,26 +181,54 @@ public class Main {
         sqlSession.commit();
         sqlSession.close();
     }
-    @Test
-    public void ontToOne(){
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-        Person person = personMapper.selectPersonById(1);
-        System.out.println(person);
-        sqlSession.close();
-    }
 
     @Test
-    public void testSelectClazzById(){
+    public void ontToOne() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+        Person person = personMapper.selectPersonById2(2);
+        System.out.println(person);
+        //Person p = new Person();
+        person.setAge(21);
+        person.setName("marry");
+        person.setSex("女");
+        //int count = personMapper.savePerson(p);
+        int count = personMapper.modifyPerson(person);
+        //int count = personMapper.removePerson(1);
+        System.out.println(count);
+        List<Person> personList = personMapper.selectAllPerson();
+        personList.forEach(System.out::println);
+        sqlSession.commit();
+        sqlSession.close();
+    }
+    @Test
+    public void oneToOne(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+        Person person = personMapper.selectById(1);
+        System.out.println(person);
+    }
+
+
+    @Test
+    public void testSelectClazzById() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         ClazzMapper clazzMapper = sqlSession.getMapper(ClazzMapper.class);
         Clazz clazz = clazzMapper.selectClazzById(1);
         System.out.println(clazz);
         sqlSession.close();
     }
+    @Test
+    public void testSelectClazzById2() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        ClazzMapper clazzMapper = sqlSession.getMapper(ClazzMapper.class);
+        Clazz clazz = clazzMapper.selectById(1);
+        System.out.println(clazz);
+        sqlSession.close();
+    }
 
     @Test
-    public void testSelectStudentById(){
+    public void testSelectStudentById() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
         TbStudent student = studentMapper.selectStudentById(1);
@@ -209,7 +237,7 @@ public class Main {
     }
 
     @Test
-    public void OneToManyTest(){
+    public void OneToManyTest() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         TbUserMapper tbUserMapper = sqlSession.getMapper(TbUserMapper.class);
         TbUser tbUser = tbUserMapper.selectUserById(1);
@@ -220,7 +248,7 @@ public class Main {
     }
 
     @Test
-    public void manyToMany(){
+    public void manyToMany() {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         OrderMapper orderMapper = sqlSession.getMapper(OrderMapper.class);
         Order order = orderMapper.selectOrderById(2);
@@ -230,6 +258,19 @@ public class Main {
         List<Article> articles = order.getArticleList();
         articles.forEach(System.out::println);
     }
+
+    @Test
+    public void manyToMany2() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        OrderMapper orderMapper = sqlSession.getMapper(OrderMapper.class);
+        Order order = orderMapper.selectById(1);
+        System.out.println(order);
+        TbUser tbUser = order.getTbUser();
+        System.out.println(tbUser);
+        List<Article> articles = order.getArticleList();
+        articles.forEach(System.out::println);
+    }
+
 
     /**
      * 不使用 XML 构建 SqlSessionFactory

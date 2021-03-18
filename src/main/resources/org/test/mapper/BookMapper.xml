@@ -3,7 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.test.mapper.BookMapper">
-    <resultMap id="BaseResultMap" type="org.test.entity.Book">
+    <!--autoMapping:完成子对象的自动映射，若开启驼峰，则按驼峰匹配-->
+    <resultMap id="BaseResultMap" type="org.test.entity.Book" autoMapping="true">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
     </resultMap>

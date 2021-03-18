@@ -9,6 +9,8 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath:spring-servlet.xml</param-value>
         </init-param>
+        <!--启动时立即加载-->
+        <load-on-startup>1</load-on-startup>
         <!--
         <multipart-config>
             文件保存的临时目录，这个目录系统不会主动创建
@@ -26,6 +28,7 @@
         <servlet-name>springmvc</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    <!--spring配置-->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:applicationContext.xml</param-value>
@@ -33,7 +36,12 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    
+    <!-- 取消对某一类文件的拦截-->
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.md</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>encoding</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -57,5 +65,8 @@
     <welcome-file-list>
         <welcome-file>/WEB-INF/views/hello3.jsp</welcome-file>
     </welcome-file-list>
-
+    <!--设置session失效时间为30分钟 -->
+    <session-config>
+        <session-timeout>600</session-timeout>
+    </session-config>
 </web-app>
