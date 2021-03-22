@@ -12,15 +12,15 @@
             </tr>
             <tr>
                 <td>学生姓名：</td>
-                <td><input type="text" name="name" value="{student.name}"></td>
+                <td><input type="text" name="name" value="${student.name}"></td>
             </tr>
             <tr>
                 <td>学生邮箱：</td>
-                <td><input type="text" name="email" value="{student.email}"></td>
+                <td><input type="text" name="email" value="${student.email}"></td>
             </tr>
             <tr>
                 <td>学生年龄：</td>
-                <td><input type="text" name="age" value="{student.age}"></td>
+                <td><input type="text" name="age" value="${student.age}"></td>
             </tr>
             <tr>
                 <td colspan="2">

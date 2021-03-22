@@ -1,12 +1,13 @@
 package org.test.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @Author: zhouliansheng
  * @Date: 2021/3/9 23:50
  */
-public class User {
+public class User implements Serializable {
     private int id;
     private String username;
     private String password;

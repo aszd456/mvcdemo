@@ -95,7 +95,7 @@ public class BookController {
 
     /**
      * 前端页面传值的时候和上面的一样，只需要写属性名就可以了，不需要写 book 对象名
-     * ook 对象中，有一个 Author 属性，前端传值参考book.jsp
+     * book 对象中，有一个 Author 属性，前端传值参考book.jsp
      *
      * @param book
      */

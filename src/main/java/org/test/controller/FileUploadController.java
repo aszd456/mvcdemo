@@ -44,6 +44,10 @@ public class FileUploadController {
      * 处理文件名问题，使用 UUID 做新的文件名，用来代替旧的文件名，可以有效防止文件名冲突
      * 保存文件
      * 生成文件访问路径
+     * request.getSchema()可以返回当前页面使用的协议，http 或是 https;
+     * request.getServerName()可以返回当前页面所在的服务器的名字;
+     * request.getServerPort()可以返回当前页面所在的服务器使用的端口,就是80;
+     * request.getContextPath()可以返回当前页面所在的应用的名字;
      *
      * @param file
      * @param req

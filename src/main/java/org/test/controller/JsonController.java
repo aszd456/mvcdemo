@@ -52,7 +52,7 @@ public class JsonController {
 
     /**
      * 浏览器传来的参数，可以是 key/value 形式的，也可以是一个 JSON 字符串。在 Jsp/Servlet 中，
-     * 我们接收 key/value 形式的参数，一般是通过 getParameter 方法。如果客户端商户惨的是 JSON 数据，
+     * 我们接收 key/value 形式的参数，一般是通过 getParameter 方法。如果客户端商户传的是 JSON 数据，
      * 我们可以通过如下格式进行解析：
      * @param req
      * @throws IOException

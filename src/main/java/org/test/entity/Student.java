@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
  */
 public class Student {
 
-    @NotNull(message = "${student.id.notnull}",groups = ValidationGroup1.class)
+    @NotNull(message = "{student.id.notnull}",groups = ValidationGroup1.class)
     private Integer id;
     @NotNull(message = "{student.name.notnull}",groups = {ValidationGroup1.class, ValidationGroup2.class})
     @Size(min = 2,max = 10,message = "{student.name.length}",groups = {ValidationGroup1.class, ValidationGroup2.class})
