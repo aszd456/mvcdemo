@@ -64,6 +64,11 @@
             <version>3.5.3</version>
         </dependency>
         <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.49</version>
@@ -84,19 +89,22 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.5</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mybatis.caches/mybatis-redis -->
         <dependency>
             <groupId>org.mybatis.caches</groupId>
             <artifactId>mybatis-redis</artifactId>
             <version>1.0.0-beta2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>30.1.1-jre</version>
         </dependency>
-
+        <!--数据库连接池-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.2.5</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>mvcdemo</finalName>
@@ -136,5 +144,18 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <!--若xml与java放一起要如下配置
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        -->
     </build>
 </project>
