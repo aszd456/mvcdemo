@@ -24,6 +24,11 @@
     <typeHandlers>
         <package name="org.test.handler"/>
     </typeHandlers>
+    <!--插件
+    <plugins>
+        <plugin interceptor="org.test.plugins.PageInterceptor"/>
+    </plugins>
+    -->
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -42,4 +47,5 @@
 <!--        <mapper resource="mapper/PersonMapper.xml"/>-->
         <package name="org.test.mapper"/>
     </mappers>
+
 </configuration>
