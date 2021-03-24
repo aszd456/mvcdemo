@@ -66,6 +66,17 @@ public class FileUploadController {
         String oldName = file.getOriginalFilename();
         String newName = UUID.randomUUID().toString() + oldName.substring(oldName.lastIndexOf("."));
         try {
+            /**
+             * 在文件上传的时候，MultipartFile中的transferTo(dest)方法只能使用一次;
+             *
+             * 并且使用transferTo方法之后不可以在使用getInputStream()方法;
+             *
+             * 否则再使用getInputStream()方法会报异常java.lang.IllegalStateException: File has been moved - cannot be read again;
+             *
+             * 使用transferTo(dest)方法将上传文件写到服务器上指定的文件;
+             *
+             * 原因文件流只可以接收读取一次，传输完毕则关闭流;
+             */
             file.transferTo(new File(folder, newName));
             return req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + "/WEB-INF/img/" + format + "/" + newName;
         } catch (IOException e) {
